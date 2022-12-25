@@ -14,3 +14,4 @@ Based on question
 если регистр с указанным в команде именем содержит ноль. 
 Остановись, когда я напишу СТОП
 
+Pull request if you want. Tag the author when using.
