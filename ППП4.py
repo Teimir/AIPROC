@@ -16,6 +16,7 @@ class Processor:
             'PUSH': self.push,
             'JMP': self.jump,
             'JFZ': self.jump_if_zero,
+            'JFO': self.jump_if_one,
             "PRT": self.print_reg,
             "HALT": self.halt,
             "CMP": self.cmp,
@@ -49,8 +50,8 @@ class Processor:
             self.registers[int(register2)] = self.pointer + 2
         self.registers[int(register2)] = self.registers[int(register1)]
 
-    def pop(self):
-        self.registers[0] = self.stack.pop()
+    def pop(self, register):
+        self.registers[int(register)] = self.stack.pop()
 
     def push(self, register):
         self.stack.append(self.registers[int(register)])
@@ -64,6 +65,11 @@ class Processor:
     def jump_if_zero(self, register, address):
         if self.registers[int(register)] == 0:
             self.jump(address)
+
+    def jump_if_one(self, register, address):
+        if self.registers[int(register)] == 1:
+            self.jump(address)
+
 
     def print_reg(self, register):
         print(self.registers[int(register)])
@@ -116,11 +122,11 @@ class Processor:
         print(self.data_references)
         return instructions
 
-def test_processor():
+def test_processor(file_name):
  processor = Processor()
- instructions = processor.load_instructions('finemulboot.asm')
+ instructions = processor.load_instructions(file_name)
  processor.run(instructions)
 
 start_time = datetime.now()
-test_processor()
+test_processor(input())
 print(datetime.now() - start_time)
