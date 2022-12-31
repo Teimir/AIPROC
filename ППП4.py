@@ -4,6 +4,7 @@ from typing import List
 
 class Processor:
     def __init__(self):
+        self.tc = 0
         self.registers = [0] * 10
         self.pointer = 0
         self.stack = []
@@ -101,6 +102,7 @@ class Processor:
             print(f'Registers after execution: {self.registers}')  # добавление для дебага
             print(f'FLAGS after execution: {self.flags}')
             self.pointer += 1
+            self.tc += 1
             if self.pointer == len(instructions):
                self.pointer = 0
 
@@ -122,11 +124,11 @@ class Processor:
         print(self.data_references)
         return instructions
 
-def test_processor(file_name):
- processor = Processor()
- instructions = processor.load_instructions(file_name)
- processor.run(instructions)
+
 
 start_time = datetime.now()
-test_processor(input())
-print(datetime.now() - start_time)
+processor = Processor()
+instructions = processor.load_instructions(input())
+processor.run(instructions)
+end_time = datetime.now()
+print( end_time - start_time, ' s | time to comp 1 comm', (end_time - start_time)/processor.tc )
