@@ -1,6 +1,9 @@
 from datetime import datetime
 import time
 from typing import List
+import os
+
+
 
 class Processor:
     def __init__(self):
@@ -125,10 +128,18 @@ class Processor:
         return instructions
 
 
+for root, dirs, files in os.walk("."):  
+   for filename in files:
+       if '.asm' in filename: print(filename)
+
+BIOSN = input()
+
+#вынос этого кода позволил сократить на 0,01-0,04 секунды
+processor = Processor()
+instructions = processor.load_instructions(BIOSN)
 
 start_time = datetime.now()
-processor = Processor()
-instructions = processor.load_instructions(input())
 processor.run(instructions)
 end_time = datetime.now()
+
 print( end_time - start_time, ' s | time to comp 1 comm', (end_time - start_time)/processor.tc )
