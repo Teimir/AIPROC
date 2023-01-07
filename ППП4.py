@@ -1,9 +1,13 @@
 from datetime import datetime
 import time
 from typing import List
+import os
+
+
 
 class Processor:
     def __init__(self):
+        self.tc = 0
         self.registers = [0] * 10
         self.pointer = 0
         self.stack = []
@@ -16,6 +20,7 @@ class Processor:
             'PUSH': self.push,
             'JMP': self.jump,
             'JFZ': self.jump_if_zero,
+            'JFO': self.jump_if_one,
             "PRT": self.print_reg,
             "HALT": self.halt,
             "CMP": self.cmp,
@@ -49,8 +54,8 @@ class Processor:
             self.registers[int(register2)] = self.pointer + 2
         self.registers[int(register2)] = self.registers[int(register1)]
 
-    def pop(self):
-        self.registers[0] = self.stack.pop()
+    def pop(self, register):
+        self.registers[int(register)] = self.stack.pop()
 
     def push(self, register):
         self.stack.append(self.registers[int(register)])
@@ -64,6 +69,11 @@ class Processor:
     def jump_if_zero(self, register, address):
         if self.registers[int(register)] == 0:
             self.jump(address)
+
+    def jump_if_one(self, register, address):
+        if self.registers[int(register)] == 1:
+            self.jump(address)
+
 
     def print_reg(self, register):
         print(self.registers[int(register)])
@@ -95,6 +105,7 @@ class Processor:
             print(f'Registers after execution: {self.registers}')  # добавление для дебага
             print(f'FLAGS after execution: {self.flags}')
             self.pointer += 1
+            self.tc += 1
             if self.pointer == len(instructions):
                self.pointer = 0
 
@@ -116,11 +127,19 @@ class Processor:
         print(self.data_references)
         return instructions
 
-def test_processor():
- processor = Processor()
- instructions = processor.load_instructions('finemulboot.asm')
- processor.run(instructions)
+
+for root, dirs, files in os.walk("."):  
+   for filename in files:
+       if '.asm' in filename: print(filename)
+
+BIOSN = input()
+
+#вынос этого кода позволил сократить на 0,01-0,04 секунды
+processor = Processor()
+instructions = processor.load_instructions(BIOSN)
 
 start_time = datetime.now()
-test_processor()
-print(datetime.now() - start_time)
+processor.run(instructions)
+end_time = datetime.now()
+
+print( end_time - start_time, ' s | time to comp 1 comm', (end_time - start_time)/processor.tc )
