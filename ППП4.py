@@ -25,6 +25,8 @@ class Processor:
             "HALT": self.halt,
             "CMP": self.cmp,
             "GTF": self.get_flag,
+            "IN": self.in_,
+            "OUT": self.out,
         }
         self.labels = {}
         self.data_references = {}
