@@ -28,10 +28,17 @@ class Processor:
         }
         self.labels = {}
         self.data_references = {}
+        self.bus = [0] * 256
+        # Массив для хранения данных, размером 256 ячеек
+        self.ram = [0] * 256
         self.flags = [0, 0, 0, 0, 0, 0, 0, 0]
         #CF - Carry flag ZF - Zero flag SF - Sign flag OF - Overflow flag IE - Interrupt enable flag TF - Trap flag, BL - BiggerLess, EL - Equal
 
+    def in_(self, register1, register2):
+        self.registers[int(register2)] = self.bus[self.registers[int(register1)]]
 
+    def out(self, register1, register2):
+        self.bus[self.registers[int(register1)]] = self.registers[int(register2)]
 
     def load(self, register, value):
         if value in self.data_references:
@@ -95,6 +102,12 @@ class Processor:
            self.flags[6] = 0
            self.flags[7] = 1
 
+    def Ram(self):
+        if self.bus[3] == 1:
+            if self.bus[2] == 1:
+                self.bus[1] = self.ram[self.bus[0]]
+            else:
+                self.ram[self.bus[0]] = self.bus[1]
 
     def run(self, instructions):
         self.running = True
@@ -102,8 +115,11 @@ class Processor:
             instruction = instructions[self.pointer]
             print(f'Executing instruction: {instruction}')  # добавление для дебага
             self.instructions[instruction[0]](*instruction[1:])
+            self.Ram()
+            #сюда внешние устройства на шине
             print(f'Registers after execution: {self.registers}')  # добавление для дебага
             print(f'FLAGS after execution: {self.flags}')
+            print(f'OUT BUS after execution: {self.bus}')
             self.pointer += 1
             self.tc += 1
             if self.pointer == len(instructions):
