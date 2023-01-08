@@ -30,7 +30,7 @@ class Processor:
         }
         self.labels = {}
         self.data_references = {}
-        self.bus = [0] * 256
+        self.bus = [0] * 50
         # Массив для хранения данных, размером 256 ячеек
         self.ram = [0] * 256
         self.flags = [0, 0, 0, 0, 0, 0, 0, 0]
