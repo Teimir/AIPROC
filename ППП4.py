@@ -83,9 +83,9 @@ class Processor:
           self.flags[1] = 1 
 
     def move(self, register1, register2):
-        if int(register1) == 11:
-            self.registers[int(register2)] = self.pointer + 2
-        self.registers[int(register2)] = self.registers[int(register1)]
+        if int(register2) == 11:
+            self.registers[int(register1)] = self.pointer + 2
+        self.registers[int(register1)] = self.registers[int(register2)]
 
     def pop(self, register):
         self.registers[int(register)] = self.stack.pop()
